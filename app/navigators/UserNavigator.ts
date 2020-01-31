@@ -5,11 +5,13 @@ import HomeScreen from '../views/HomeScreen';
 import DetailsScreen from '../views/DetailsScreen';
 import ChatListScreen from '../views/ChatListScreen';
 import ChatScreen from '../views/ChatScreen';
+import {TestRealm} from '../utils/reaml/testDB';
 
 const Home = createStackNavigator(
   {
     Home: {
-      screen: HomeScreen,
+      screen: TestRealm,
+      // screen: HomeScreen,
     },
   },
   {

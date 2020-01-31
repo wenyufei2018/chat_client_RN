@@ -1,173 +1,47 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
-import {View, Text} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View} from 'react-native';
 import {NavigationScreenProp} from 'react-navigation';
 import Chat from '../components/wechat-chat';
-import uuid from 'uuid';
+import {testUserMessages, selfUser, frinedUser} from '../test';
+import MessageService from '../utils/reaml/messageService';
 
-export const selfUser: User = {
-  _id: 1,
-  name: 'Developer',
-};
-
-export const frinedUser: User = {
-  _id: 2,
-  name: 'React Native',
-};
-
-export const testUserMessages: IMessage[] = [
-  {
-    _id: uuid.v4(),
-    content: '#awesome',
-    createdAt: new Date(),
-    user: {
-      _id: 1,
-      name: 'Developer',
-    },
-    type: 'text',
-  },
-  {
-    _id: uuid.v4(),
-    content: 'Paris',
-    createdAt: new Date(),
-    user: {
-      _id: 2,
-      name: 'React Native',
-    },
-    type: 'text',
-    sent: true,
-    received: true,
-  },
-  {
-    _id: uuid.v4(),
-    content: 'Send me a picture!',
-    createdAt: new Date(),
-    user: {
-      _id: 1,
-      name: 'Developer',
-    },
-    type: 'text',
-  },
-  {
-    _id: uuid.v4(),
-    content: '',
-    createdAt: new Date(),
-    user: {
-      _id: 2,
-      name: 'React Native',
-    },
-    sent: true,
-    received: true,
-    type: 'text',
-  },
-  {
-    _id: uuid.v4(),
-    content: 'Where are you?',
-    createdAt: new Date(),
-    user: {
-      _id: 1,
-      name: 'Developer',
-    },
-    type: 'text',
-  },
-  {
-    _id: uuid.v4(),
-    content: 'Yes, and I use #GiftedChat!',
-    createdAt: new Date(),
-    user: {
-      _id: 2,
-      name: 'React Native',
-    },
-    sent: true,
-    received: true,
-    type: 'text',
-  },
-  {
-    _id: uuid.v4(),
-    content: 'Are you building a chat app?',
-    createdAt: new Date(),
-    user: {
-      _id: 1,
-      name: 'Developer',
-    },
-    type: 'text',
-  },
-  {
-    _id: uuid.v4(),
-    content: 'This is a quick reply. Do you love Gifted Chat? (radio) KEEP IT',
-    createdAt: new Date(),
-    user: {
-      _id: 2,
-      name: 'React Native',
-    },
-    type: 'text',
-  },
-  {
-    _id: uuid.v4(),
-    content: 'This is a quick reply. Do you love Gifted Chat? (checkbox)',
-    createdAt: new Date(),
-    user: {
-      _id: 2,
-      name: 'React Native',
-    },
-    type: 'text',
-  },
-  {
-    _id: uuid.v4(),
-    content: '',
-    createdAt: new Date(),
-    user: {
-      _id: 2,
-      name: 'React Native',
-    },
-    type: 'text',
-  },
-  {
-    _id: uuid.v4(),
-    content:
-      'It uses the same design as React, letting you compose a rich mobile UI from declarative components https://facebook.github.io/react-native/',
-    createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
-    user: {
-      _id: 1,
-      name: 'Developer',
-    },
-    type: 'text',
-
-  },
-  {
-    _id: uuid.v4(),
-    content: 'React Native lets you build mobile apps using only JavaScript',
-    createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
-    user: {
-      _id: 1,
-      name: 'Developer',
-    },
-    type: 'text',
-  },
-  {
-    _id: uuid.v4(),
-    content: 'This is a system message.',
-    createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
-    user: {
-      _id: 1,
-      name: 'Developer',
-    },
-    type: 'text',
-  },
-];
+let messageService: MessageService;
 
 interface IChatScreen {
   navigation: NavigationScreenProp<{}>;
 }
 
 const ChatScreen: React.FC<IChatScreen> = () => {
+  
+  const [messages, setMessages] = useState<IMessage[]>([]);
+  
+  useEffect( () => {
+    console.warn('++++++++++++++');
+    messageService = new MessageService();
+    setMessages( messageService.findAll(frinedUser) || []);
+    return () => {
+      messageService.close();
+      console.warn('----------------');
+    };
+  }, []);
+  
+  useEffect(() => {
+    // TODO: 解决reaml数据重复的问题
+    if (messages.length > 0) {
+      const tmp = messages[messages.length - 1];
+      console.log('添加数据', tmp);
+      messageService.saveOneUser([tmp], tmp.user);
+    }
+  }, [messages] );
+  
   return (
     <View style={{flex: 1}}>
       <Chat
         messages={testUserMessages}
         user={selfUser}
         onSend={currentMessage => {
-          // setMessages([currentMessage].concat(messages));
+          setMessages([currentMessage].concat(messages));
         }}
       />
     </View>
