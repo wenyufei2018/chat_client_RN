@@ -5,30 +5,6 @@ import HomeScreen from '../views/HomeScreen';
 import DetailsScreen from '../views/DetailsScreen';
 import ChatListScreen from '../views/ChatListScreen';
 import ChatScreen from '../views/ChatScreen';
-import {TestRealm} from '../utils/reaml/testDB';
-
-const Home = createStackNavigator(
-  {
-    Home: {
-      screen: TestRealm,
-      // screen: HomeScreen,
-    },
-  },
-  {
-    initialRouteName: 'Home',
-  },
-);
-
-const Details = createStackNavigator(
-  {
-    Details: {
-      screen: DetailsScreen,
-    },
-  },
-  {
-    initialRouteName: 'Details',
-  },
-);
 
 const ChatList = createStackNavigator(
   {
@@ -41,14 +17,24 @@ const ChatList = createStackNavigator(
   },
   {
     initialRouteName: 'ChatList',
+    navigationOptions: ({navigation}) => {
+      let tabBarVisible = true;
+      if (navigation.state.index > 0) {
+        tabBarVisible = false;
+      }
+      return {
+        tabBarVisible,
+      };
+    }
   },
 );
 
+
 const AppNavigator = createBottomTabNavigator(
   {
-    Home: {screen: Home},
+    Home: {screen: HomeScreen}, // TestRealm
     ChatList: {screen: ChatList},
-    Details: {screen: Details},
+    Details: {screen: DetailsScreen},
   },
   {
     initialRouteName: 'ChatList',
