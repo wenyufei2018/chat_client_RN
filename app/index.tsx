@@ -14,10 +14,8 @@ const navigatorsContext = createContext<INavigatorsContext>({
   setNavigator: () => {},
 });
 
-const App: React.FC = () => {
-  const [navigator, setNavigator] = useState<INavigatorsItem>(
-    'TouristNavigator',
-  );
+const ChatClientRN: React.FC = () => {
+  const [navigator, setNavigator] = useState<INavigatorsItem>('UserNavigator');
 
   const renderNavigators = () => {
     switch (navigator) {
@@ -37,4 +35,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default ChatClientRN;
