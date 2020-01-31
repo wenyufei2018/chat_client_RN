@@ -19,7 +19,13 @@ interface QuickReplies {
   keepIt?: boolean;
 }
 
-type MessageType = 'text' | 'image' | 'video' | 'audio' | 'system' | 'quickReplies';
+type MessageType =
+  | 'text'
+  | 'image'
+  | 'video'
+  | 'audio'
+  | 'system'
+  | 'quickReplies';
 interface IMessage {
   _id: string;
   type: MessageType;
@@ -40,7 +46,12 @@ type MessagePosition = 'left' | 'right';
 // 这种方式粒度不够
 // type ILoyoutItem = 'Messages_InputBar' | 'Messages_InputBar_Accessory' | 'Messages_InputBar_KeyBoard';
 
-type ILoyoutItem = 'noShow' | 'emojiShow' | 'functionShow' | 'voiceShow' | 'keyBoardShow';
+type ILoyoutItem =
+  | 'noShow'
+  | 'emojiShow'
+  | 'functionShow'
+  | 'voiceShow'
+  | 'keyBoardShow';
 
 interface ILoyoutItemContext {
   loyout: ILoyoutItem;

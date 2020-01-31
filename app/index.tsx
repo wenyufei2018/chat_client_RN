@@ -9,13 +9,15 @@ interface INavigatorsContext {
   setNavigator: (navigator: INavigatorsItem) => void;
 }
 
-const navigatorsContext = createContext<INavigatorsContext>({
+export const navigatorsContext = createContext<INavigatorsContext>({
   navigator: 'TouristNavigator',
   setNavigator: () => {},
 });
 
 const ChatClientRN: React.FC = () => {
-  const [navigator, setNavigator] = useState<INavigatorsItem>('UserNavigator');
+  const [navigator, setNavigator] = useState<INavigatorsItem>(
+    'TouristNavigator',
+  );
 
   const renderNavigators = () => {
     switch (navigator) {

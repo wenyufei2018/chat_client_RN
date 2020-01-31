@@ -1,19 +1,15 @@
 import {createStackNavigator} from 'react-navigation-stack';
 import {createAppContainer} from 'react-navigation';
-import HomeScreen from '../views/Home';
-import DetailsScreen from '../views/DetailsScreen';
+import TouristScreen from '../views/TouristScreen';
 
 const AppNavigator = createStackNavigator(
   {
-    Home: {
-      screen: HomeScreen,
-    },
-    Details: {
-      screen: DetailsScreen,
+    Tourist: {
+      screen: TouristScreen,
     },
   },
   {
-    initialRouteName: 'Details',
+    initialRouteName: 'Tourist',
   },
 );
 
