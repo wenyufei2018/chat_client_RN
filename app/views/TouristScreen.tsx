@@ -1,43 +1,27 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useContext} from 'react';
+import React from 'react';
 import {View, Text, Button} from 'react-native';
-import {NavigationScreenProp} from 'react-navigation';
-import {navigatorsContext} from '../index';
-import gql from 'graphql-tag';
-import {useQuery} from '@apollo/react-hooks'
+import {NavigationStackProp} from 'react-navigation-stack';
 
 interface ITouristScreen {
-  navigation: NavigationScreenProp<{}>;
+  navigation: NavigationStackProp<{}>;
 }
 
-const TouristScreen: React.FC<ITouristScreen> = () => {
-  const {setNavigator} = useContext(navigatorsContext);
-  const query_allUsers = gql(`
-    query{
-      users{
-        name
-      }
-    }
-`);
-  
-  const {loading, error, data} = useQuery(query_allUsers);
-  if(!loading) console.log(data);
-  if(!!error) console.log(error);
+const TouristScreen: React.FC<ITouristScreen> = (props) => {
   
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>游客页面</Text>
       <Button
-        title="转到用户页面"
-        onPress={() => setNavigator('UserNavigator')}
+        title="转到登录界面"
+        onPress={() => {
+          props.navigation.push('SignIn');
+        }}
       />
       <Button
-        title="测试 apollo"
+        title="转到注册界面"
         onPress={() => {
-          console.log("data");
-          // client.query({query:query_allUsers})
-          //   .then(data => console.log(data))
-          //   .catch(error => console.error(error));
+          props.navigation.push('SignUp');
         }}
       />
     </View>
