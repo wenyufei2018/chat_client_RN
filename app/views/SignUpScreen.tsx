@@ -2,11 +2,10 @@
 import React, {useContext} from 'react';
 import {View, Text} from 'react-native';
 import {NavigationScreenProp} from 'react-navigation';
-import {navigatorsContext} from '../index';
+import {navigatorsContext, userInfoContext} from '../index';
 import gql from 'graphql-tag';
 import {useQuery, useMutation} from '@apollo/react-hooks'
 import {Input, Button} from 'react-native-elements';
-import {addMessage, IAddMessage} from '../utils/apollo/gql'
 
 interface ISignUpScreen {
   navigation: NavigationScreenProp<{}>;
@@ -30,6 +29,7 @@ const AddUserGql = gql`
 
 const SignUpScreen: React.FC<ISignUpScreen> = () => {
   const {setNavigator} = useContext(navigatorsContext);
+  const {setUserInfo} = useContext(userInfoContext);
   
   const [addUser, { loading: addUserLoading }] = useMutation(AddUserGql);
   
@@ -64,13 +64,11 @@ const SignUpScreen: React.FC<ISignUpScreen> = () => {
             variables: {input:{name: Name}},
             refetchQueries: [{ query: ShowUserGql }]
           }).then((res) => {
-            console.log(res.data);
+            console.log(res.data.addUser);
           });
+          setNavigator('UserNavigator');
+          setUserInfo({name: Name});
         }}
-      />
-      <Button
-        title="转到用户路由"
-        onPress={() => setNavigator('UserNavigator')}
       />
     </View>
   );

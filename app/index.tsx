@@ -20,10 +20,30 @@ export const navigatorsContext = createContext<INavigatorsContext>({
   setNavigator: () => {},
 });
 
+interface IUserInfo {
+  name: string;
+  avater?: string;
+  friends?: number[];
+}
+interface IUserInfoContext {
+  userInfo?: IUserInfo;
+  setUserInfo: (userInfo: IUserInfo) => void;
+}
+
+export const userInfoContext = createContext<IUserInfoContext>({
+  setUserInfo: () => {}
+});
+
 const ChatClientRN: React.FC = () => {
   const [navigator, setNavigator] = useState<INavigatorsItem>(
     'TouristNavigator',
   );
+  
+  const [userInfo, setUserInfo] = useState<IUserInfo>({
+    name: 'default',
+    avater: 'default',
+    friends: [],
+  });
   
   const cache = new InMemoryCache({
     addTypename: false
@@ -52,9 +72,12 @@ const ChatClientRN: React.FC = () => {
 
   return (
     <navigatorsContext.Provider value={{navigator, setNavigator}}>
-      <ApolloProvider client={client}>
-        {renderNavigators()}
-      </ApolloProvider>
+      <userInfoContext.Provider value={{userInfo, setUserInfo}}>
+        <ApolloProvider client={client}>
+          {renderNavigators()}
+        </ApolloProvider>
+      </userInfoContext.Provider>
+
     </navigatorsContext.Provider>
   );
 };
