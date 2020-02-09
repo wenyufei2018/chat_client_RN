@@ -1,9 +1,9 @@
 import React from 'react';
 import {View, StyleSheet, StyleProp} from 'react-native';
 import Day from './Day';
-import SystemMessage from './SystemMessage';
 import Avatar from './Avatar';
 import Bubble from './Bubble';
+import {IMessage, MessagePosition} from '../types';
 
 export interface LeftRightStyle<T> {
   left: StyleProp<T>;
@@ -44,25 +44,21 @@ const Message: React.FC<MessageProps> = props => {
   return (
     <View>
       <Day currentMessage={currentMessage} previousMessage={previousMessage} />
-      {currentMessage.type === 'system' ? (
-        <SystemMessage />
-      ) : (
-        <View
-          style={[
-            styles[position].container,
-            // TODO: 调节样式
-            // { marginBottom: sameUser ? 2 : 10 },
-            // !this.props.inverted && { marginBottom: 2 },
-          ]}>
-          {position === 'left' ? (
-            <Avatar position={position} currentMessage={currentMessage} />
-          ) : null}
-          <Bubble position={position} currentMessage={currentMessage} />
-          {position === 'right' ? (
-            <Avatar position={position} currentMessage={currentMessage} />
-          ) : null}
-        </View>
-      )}
+      <View
+        style={[
+          styles[position].container,
+          // TODO: 调节样式
+          // { marginBottom: sameUser ? 2 : 10 },
+          // !this.props.inverted && { marginBottom: 2 },
+        ]}>
+        {position === 'left' ? (
+          <Avatar position={position} currentMessage={currentMessage} />
+        ) : null}
+        <Bubble position={position} currentMessage={currentMessage} />
+        {position === 'right' ? (
+          <Avatar position={position} currentMessage={currentMessage} />
+        ) : null}
+      </View>
     </View>
   );
 };

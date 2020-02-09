@@ -1,12 +1,47 @@
 import React, {createContext, useState} from 'react';
-import {TouristNavigator, UserNavigator} from './navigators';
 import {View} from 'react-native';
-import { ApolloClient } from 'apollo-client';
-import { ApolloProvider } from '@apollo/react-hooks';
+import {ApolloClient} from 'apollo-client';
+import {InMemoryCache} from 'apollo-cache-inmemory';
+import {ApolloLink, split} from 'apollo-link';
+import {HttpLink} from 'apollo-link-http';
+import {WebSocketLink} from 'apollo-link-ws';
+import {ApolloProvider} from '@apollo/react-hooks';
+import {OperationDefinitionNode} from 'graphql';
+
 import {apolloUrl} from './configs';
-import fetch from "node-fetch";
-import { HttpLink } from 'apollo-link-http';
-import { InMemoryCache } from 'apollo-cache-inmemory';
+import {TouristNavigator, UserNavigator} from './navigators';
+import {IUser} from './chat';
+const createClient = () => {
+  const httpLink = new HttpLink({
+    uri: apolloUrl,
+  });
+
+  const wsLink = new WebSocketLink({
+    uri: 'ws://localhost:4000/graphql',
+    options: {
+      reconnect: true,
+    },
+  });
+
+  const terminatingLink = split(
+    ({query: {definitions}}) =>
+      definitions.some(node => {
+        const {kind, operation} = node as OperationDefinitionNode;
+        return kind === 'OperationDefinition' && operation === 'subscription';
+      }),
+    wsLink,
+    httpLink,
+  );
+
+  const link = ApolloLink.from([terminatingLink]);
+
+  const client = new ApolloClient({
+    link,
+    cache: new InMemoryCache(),
+  });
+
+  return client;
+};
 
 type INavigatorsItem = 'TouristNavigator' | 'UserNavigator';
 
@@ -20,44 +55,25 @@ export const navigatorsContext = createContext<INavigatorsContext>({
   setNavigator: () => {},
 });
 
-interface IUserInfo {
-  name: string;
-  avater?: string;
-  friends?: number[];
-}
 interface IUserInfoContext {
-  userInfo?: IUserInfo;
-  setUserInfo: (userInfo: IUserInfo) => void;
+  userInfo?: IUser;
+  setUserInfo: (userInfo: IUser) => void;
 }
 
 export const userInfoContext = createContext<IUserInfoContext>({
-  setUserInfo: () => {}
+  setUserInfo: () => {},
 });
 
 const ChatClientRN: React.FC = () => {
   const [navigator, setNavigator] = useState<INavigatorsItem>(
     'TouristNavigator',
   );
-  
-  const [userInfo, setUserInfo] = useState<IUserInfo>({
-    name: 'default',
-    avater: 'default',
-    friends: [],
+
+  const [userInfo, setUserInfo] = useState<IUser>({
+    userId: 'default',
   });
-  
-  const cache = new InMemoryCache({
-    addTypename: false
-  });
-  
-  const client = new ApolloClient({
-    ssrMode: false,//__SERVER__ ? true : false,
-    // @ts-ignore
-    link: new HttpLink({
-      uri: apolloUrl,
-      fetch
-    }),
-    cache
-  });
+
+  const client = createClient();
 
   const renderNavigators = () => {
     switch (navigator) {
@@ -73,11 +89,8 @@ const ChatClientRN: React.FC = () => {
   return (
     <navigatorsContext.Provider value={{navigator, setNavigator}}>
       <userInfoContext.Provider value={{userInfo, setUserInfo}}>
-        <ApolloProvider client={client}>
-          {renderNavigators()}
-        </ApolloProvider>
+        <ApolloProvider client={client}>{renderNavigators()}</ApolloProvider>
       </userInfoContext.Provider>
-
     </navigatorsContext.Provider>
   );
 };

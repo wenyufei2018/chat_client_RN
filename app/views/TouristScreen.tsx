@@ -7,8 +7,7 @@ interface ITouristScreen {
   navigation: NavigationStackProp<{}>;
 }
 
-const TouristScreen: React.FC<ITouristScreen> = (props) => {
-  
+const TouristScreen: React.FC<ITouristScreen> = props => {
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>游客页面</Text>

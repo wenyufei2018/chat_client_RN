@@ -6,6 +6,7 @@ import Plus from './Plus';
 import {isPlus} from './utils';
 import Init from './init';
 import VoiceAnimate from './voiceAnimate';
+import {ILoyoutItemContext, IMessagesContext, IMessage, IUser, ILoyoutItem, IVoiceState} from './types';
 
 export const loyoutItemContext = createContext<ILoyoutItemContext>({
   loyout: 'noShow',
@@ -19,7 +20,8 @@ export const loyoutItemContext = createContext<ILoyoutItemContext>({
 
 export const MessagesContext = createContext<IMessagesContext>({
   messages: [],
-  user: {_id: 0},
+  user: {userId: 'default'},
+  friend: {userId: 'default'},
   messageContent: '',
   setMessageContent: () => {},
   voiceState: 'cancel',
@@ -47,12 +49,13 @@ Keyboard.addListener('keyboardDidShow', keyboardDidShow);
 
 interface ChatProps {
   messages: IMessage[];
-  user: User;
+  user: IUser;
   onSend: (message: IMessage) => void;
+  friend: IUser;
 }
 
 const Chat: React.FC<ChatProps> = (props) => {
-  const {messages, user, onSend} = props;
+  const {messages, user, onSend, friend} = props;
   const [loyout, setLoyout] = useState<ILoyoutItem>('keyBoardShow');
   const [isFixed, setFixed] = useState<boolean>(false);
   const [inputToolBarY, setInputToolBarY] = useState<number>(0);
@@ -90,7 +93,7 @@ const Chat: React.FC<ChatProps> = (props) => {
         value = {{loyout, setLoyout, isFixed, setFixed, loyoutFixed, inputToolBarY, setInputToolBarY}}
       >
         <MessagesContext.Provider
-          value = {{messages, user, onSend, messageContent, setMessageContent, voiceState, setVoiceState}}
+          value = {{messages, user, friend, onSend, messageContent, setMessageContent, voiceState, setVoiceState}}
         >
           <MessageContainer/>
           <InputToolBar

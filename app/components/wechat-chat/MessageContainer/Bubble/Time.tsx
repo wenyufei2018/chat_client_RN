@@ -4,6 +4,7 @@ import {StyleSheet, Text, View, TextProps} from 'react-native';
 import moment from 'moment';
 
 import {TIME_FORMAT, DATE_LOCALE, Color} from '../../constances';
+import {MessagePosition, IMessage} from '../../types';
 
 const containerStyle = {
   marginLeft: 10,
@@ -49,7 +50,7 @@ const Time: React.FC<TimeProps> = props => {
   return (
     <View style={[styles[position].container]}>
       <Text style={[styles[position].text] as TextProps}>
-        {moment(currentMessage.createdAt)
+        {moment(currentMessage.created)
           .locale(DATE_LOCALE)
           .format(TIME_FORMAT)}
       </Text>

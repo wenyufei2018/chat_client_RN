@@ -3,6 +3,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import moment from 'moment';
 import {Color, DATE_FORMAT, DATE_LOCALE} from '../constances';
 import {isSameDay} from '../utils';
+import {IMessage} from '../types';
 
 const styles = StyleSheet.create({
   container: {
@@ -31,7 +32,7 @@ const Day: React.FC<DayProps> = props => {
     return (
       <View style={[styles.container]}>
         <Text style={[styles.text]}>
-          {moment(currentMessage.createdAt)
+          {moment(currentMessage.created)
             .locale(DATE_LOCALE)
             .format(DATE_FORMAT)}
         </Text>

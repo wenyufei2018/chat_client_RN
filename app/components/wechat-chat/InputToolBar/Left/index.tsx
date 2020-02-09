@@ -9,7 +9,7 @@ interface ILeft {
 }
 
 const Left: React.FC<ILeft> = props => {
-  const {KBDissmiss, KBShow} = props;
+  const {KBDissmiss} = props;
   const {setLoyout, loyout} = useContext(loyoutItemContext);
 
   const onPress = () => {

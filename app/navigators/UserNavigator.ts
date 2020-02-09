@@ -5,6 +5,7 @@ import HomeScreen from '../views/HomeScreen';
 import DetailsScreen from '../views/DetailsScreen';
 import ChatListScreen from '../views/ChatListScreen';
 import ChatScreen from '../views/ChatScreen';
+import AddFriendScreen, {IAddFriendProps} from '../views/AddFriendScreen';
 
 const ChatList = createStackNavigator(
   {
@@ -13,6 +14,9 @@ const ChatList = createStackNavigator(
     },
     Chat: {
       screen: ChatScreen,
+    },
+    AddFriend: {
+      screen: AddFriendScreen,
     },
   },
   {
@@ -25,10 +29,9 @@ const ChatList = createStackNavigator(
       return {
         tabBarVisible,
       };
-    }
+    },
   },
 );
-
 
 const AppNavigator = createBottomTabNavigator(
   {

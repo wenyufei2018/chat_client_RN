@@ -3,6 +3,7 @@ import {View, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import {Color} from '../../constances';
 import MessageText from './MessageText';
 import Time from './Time';
+import {MessagePosition, IMessage} from '../../types';
 
 const styles = {
   left: StyleSheet.create({

@@ -1,73 +1,76 @@
-/* eslint-disable react-native/no-inline-styles */
-import React, {useContext} from 'react';
+import React from 'react';
 import {View, Text} from 'react-native';
 import {NavigationScreenProp} from 'react-navigation';
-import {navigatorsContext, userInfoContext} from '../index';
 import gql from 'graphql-tag';
-import {useQuery, useMutation} from '@apollo/react-hooks'
+import {useQuery, useMutation} from '@apollo/react-hooks';
 import {Input, Button} from 'react-native-elements';
+
+import {IUser} from '../chat';
 
 interface ISignUpScreen {
   navigation: NavigationScreenProp<{}>;
 }
 
-const ShowUserGql = gql`
-    query{
-        users{
-            name
-        }
+const AddUserGql = gql`
+  mutation AddUser($userId: String!) {
+    addUser(userId: $userId) {
+      status
     }
+  }
 `;
 
-const AddUserGql = gql`
-    mutation AddUser($input: addUserInput){
-        addUser(input:$input){
-            name
-        }
+const allUserGql = gql`
+  query {
+    allUser {
+      friends
+      userId
+      avatar
     }
+  }
 `;
 
 const SignUpScreen: React.FC<ISignUpScreen> = () => {
-  const {setNavigator} = useContext(navigatorsContext);
-  const {setUserInfo} = useContext(userInfoContext);
-  
-  const [addUser, { loading: addUserLoading }] = useMutation(AddUserGql);
-  
-  const {loading: ShowUserLoading, error, data} = useQuery(ShowUserGql);
-  if(!ShowUserLoading) console.log(data);
-  if(!!error) {
-    console.warn(error);
-  }
-  
-  let Name: string;
+  const [addUser] = useMutation<{addUser: {status: string}}, {userId: string}>(
+    AddUserGql,
+  );
+  const {refetch} = useQuery<{allUser: IUser[]}>(allUserGql);
+  let userId: string = '';
+
   return (
+    // eslint-disable-next-line react-native/no-inline-styles
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>注册页面</Text>
       <Input
-        onChangeText={(name) => {
-          console.log((name));
-          Name = name;
+        onChangeText={name => {
+          console.log(name);
+          userId = name;
         }}
         placeholder={'输入姓名'}
       />
       <Button
-        title='添加用户'
-        onPress={()=>{
-          for(const item of data.users){
-            console.log(item, Name);
-            if(item.name === Name) {
-              console.warn('有相同的姓名');
-              return;
-            }
+        title="添加用户"
+        onPress={() => {
+          if (!userId) {
+            return;
           }
-          addUser({
-            variables: {input:{name: Name}},
-            refetchQueries: [{ query: ShowUserGql }]
-          }).then((res) => {
-            console.log(res.data.addUser);
+          refetch().then(res => {
+            const {allUser} = res.data;
+            for (const item of allUser) {
+              if (userId === item.userId) {
+                console.warn('用户已经存在')
+                return;
+              }
+            }
+            addUser({
+              variables: {userId},
+            })
+              .then((res) => {
+                console.warn(res.data?.addUser.status);
+              })
+              .catch(e => {
+                console.error(e);
+              });
           });
-          setNavigator('UserNavigator');
-          setUserInfo({name: Name});
         }}
       />
     </View>

@@ -3,6 +3,7 @@ import {Linking, StyleSheet, View} from 'react-native';
 // @ts-ignore
 import ParsedText from 'react-native-parsed-text';
 import Communications from 'react-native-communications';
+import {IMessage} from '../../types';
 
 const WWW_URL_PATTERN = /^www\./i;
 

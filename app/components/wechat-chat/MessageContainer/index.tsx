@@ -78,11 +78,11 @@ const MessageContainer: React.FC = () => {
             currentMessage={item}
             nextMessage={messages[index + 1]}
             previousMessage={messages[index - 1]}
-            position={item.user._id === user._id ? 'right' : 'left'}
+            position={item.userId === user.userId ? 'right' : 'left'}
           />
         )}
         keyExtractor={item => {
-          return item._id + '';
+          return item.messageId + '';
         }}
         style={styles.listStyle}
         contentContainerStyle={styles.contentContainerStyle}

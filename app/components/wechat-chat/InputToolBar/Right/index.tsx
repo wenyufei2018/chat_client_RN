@@ -3,6 +3,7 @@ import RN, {Keyboard, TouchableOpacity, Image, Text} from 'react-native';
 import {loyoutItemContext, MessagesContext} from '../..';
 import {styles} from '..';
 import uuid from 'uuid';
+import { IMessage, ILoyoutItem } from '../../types';
 
 interface IRight {
   inputElRef: React.RefObject<RN.TextInput>;
@@ -47,11 +48,12 @@ const Right: React.FC<IRight> = (props) => {
           style = {styles.button_Text}
           onPress = {() => {
             const currentMessage: IMessage = {
-              _id: uuid.v4(),
+              messageId: uuid.v4(),
               type: 'text',
               content: messageContent,
-              createdAt: new Date(),
-              user,
+              created: new Date(),
+              userId: user.userId,
+              users: [],
             };
             onSend(currentMessage);
             setMessageContent('');

@@ -1,6 +1,8 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet, View, Image, Text, ImageSourcePropType} from 'react-native';
 import {Color} from '../constances';
+import {IMessage, MessagePosition} from '../types';
+import {MessagesContext} from '..';
 
 const styles = {
   left: StyleSheet.create({
@@ -42,16 +44,18 @@ export interface AvatarProps {
 
 const Avatar: React.FC<AvatarProps> = props => {
   const {currentMessage, position} = props;
+  const {user, friend} = useContext(MessagesContext);
+  const sendUser = currentMessage.userId === user.userId ? user : friend;
 
   return (
     <View style={[styles[position].container]}>
-      {currentMessage.user.avatar ? (
+      {sendUser.avatar ? (
         <Image
           style={[styles[position].image]}
-          source={currentMessage.user.avatar as ImageSourcePropType}
+          source={sendUser.avatar as ImageSourcePropType}
         />
       ) : (
-        <Text style={[styles[position].image]}>{currentMessage.user._id}</Text>
+        <Text style={[styles[position].image]}>{sendUser.userId}</Text>
       )}
     </View>
   );

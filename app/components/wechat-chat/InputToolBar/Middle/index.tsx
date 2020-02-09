@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useContext, useState} from 'react';
 import RN, {TextInput, Text, Keyboard, View, PanResponder} from 'react-native';
 import {loyoutItemContext, MessagesContext} from '../..';

@@ -1,59 +1,19 @@
-// 用户声明
-type renderFunction = (x: any) => JSX.Element;
-interface User {
-  _id: number;
-  name?: string;
-  avatar?: string;
-}
+import {IMessage, IUser} from '../../chat';
 
-// 消息回复声明
-interface Reply {
-  title: string;
-  value: string;
-  messageId?: any;
-}
+export {IMessage, IUser};
 
-interface QuickReplies {
-  type: 'radio' | 'checkbox';
-  values: Reply[];
-  keepIt?: boolean;
-}
+export type renderFunction = (x: any) => JSX.Element;
 
-type MessageType =
-  | 'text'
-  | 'image'
-  | 'video'
-  | 'audio'
-  | 'system'
-  | 'quickReplies';
-interface IMessage {
-  _id: string;
-  type: MessageType;
-  content: string;
-  createdAt: Date;
-  user: User;
-  sent?: boolean;
-  received?: boolean;
-  pending?: boolean;
-}
+export type MessagePosition = 'left' | 'right';
 
-type IChatMessage = IMessage;
-
-type MessagePosition = 'left' | 'right';
-
-// 布局声明
-
-// 这种方式粒度不够
-// type ILoyoutItem = 'Messages_InputBar' | 'Messages_InputBar_Accessory' | 'Messages_InputBar_KeyBoard';
-
-type ILoyoutItem =
+export type ILoyoutItem =
   | 'noShow'
   | 'emojiShow'
   | 'functionShow'
   | 'voiceShow'
   | 'keyBoardShow';
 
-interface ILoyoutItemContext {
+export interface ILoyoutItemContext {
   loyout: ILoyoutItem;
   setLoyout: (loyoutItem: ILoyoutItem) => void;
   isFixed: boolean;
@@ -71,11 +31,17 @@ interface ILoyoutItemContext {
 
 // messages 全局
 
-type IVoiceState = 'loading' | 'recording' | 'timeShort' | 'cancel' | 'giveUp';
+export type IVoiceState =
+  | 'loading'
+  | 'recording'
+  | 'timeShort'
+  | 'cancel'
+  | 'giveUp';
 
-interface IMessagesContext {
+export interface IMessagesContext {
   messages: IMessage[];
-  user: User;
+  user: IUser;
+  friend: IUser;
   onSend: (message: IMessage) => void;
   messageContent: string;
   setMessageContent: (messageContent: string) => void;
